@@ -5,62 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CMC Widget</title>
   <style>
-    * { margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       background: #191919;
+      overflow: hidden;
+      height: 100%;
+    }
+    /* 모든 스크롤바 제거 */
+    ::-webkit-scrollbar { display: none !important; }
+    * {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    /* 위젯 감싸서 하단 잘라내기 */
+    .widget-wrapper {
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      align-items: flex-start;
+      padding-top: 20px;
+      height: 100%;
       overflow: hidden;
     }
-    /* 하단 스크롤바 + 푸터 숨기기 */
-    #coinmarketcap-widget-coin-price-block .cmc-coin-price-block__footer,
-    #coinmarketcap-widget-coin-price-block .cmc-coin-price-block__scroll,
-    #coinmarketcap-widget-coin-price-block > div > div:last-child {
-      display: none !important;
+    #coinmarketcap-widget-coin-price-block {
+      max-height: 220px;
+      overflow: hidden !important;
     }
   </style>
 </head>
 <body>
-  <script type="text/javascript" src="https://files.coinmarketcap.com/static/widget/coinPriceBlock.js"></script>
-  <div id="coinmarketcap-widget-coin-price-block"
-    coins="1,1027,825"
-    currency="KRW"
-    theme="dark"
-    transparent="true"
-    show-symbol-logo="true"
-  ></div>
-
-  <script>
-    // 위젯 로드 후 하단 요소 제거
-    const observer = new MutationObserver(() => {
-      const widget = document.getElementById('coinmarketcap-widget-coin-price-block');
-      if (widget) {
-        // 스크롤바 제거
-        widget.querySelectorAll('[class*="scroll"], [class*="footer"], [class*="bottom"]').forEach(el => {
-          el.style.display = 'none';
-        });
-        // 마지막 자식 div (푸터 영역) 제거
-        const inner = widget.querySelector('div > div');
-        if (inner) {
-          const children = inner.children;
-          for (let i = children.length - 1; i >= 0; i--) {
-            const text = children[i].textContent;
-            if (text.includes('KRW') || text.includes('Powered') || text.includes('CoinMarketCap')) {
-              children[i].style.display = 'none';
-            }
-          }
-          // 가로 스크롤바 영역
-          inner.querySelectorAll('scrollbar, [class*="croll"]').forEach(el => {
-            el.style.display = 'none';
-          });
-        }
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    // 3초 후 옵저버 해제
-    setTimeout(() => observer.disconnect(), 3000);
-  </script>
+  <div class="widget-wrapper">
+    <script type="text/javascript" src="https://files.coinmarketcap.com/static/widget/coinPriceBlock.js"></script>
+    <div id="coinmarketcap-widget-coin-price-block"
+      coins="1,1027,825"
+      currency="KRW"
+      theme="dark"
+      transparent="true"
+      show-symbol-logo="true"
+    ></div>
+  </div>
 </body>
 </html>
