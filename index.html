@@ -6,11 +6,14 @@
   <title>CMC Widget</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      background: #191919;
+    html {
       overflow: hidden !important;
       height: 100%;
-      width: 100%;
+    }
+    body {
+      background: #191919;
+      overflow: hidden !important;
+      height: 170px;
     }
     ::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
     * {
@@ -21,6 +24,7 @@
       display: flex;
       justify-content: center;
       overflow: hidden !important;
+      height: 170px;
     }
     #coinmarketcap-widget-coin-price-block {
       overflow: hidden !important;
@@ -38,43 +42,5 @@
       show-symbol-logo="true"
     ></div>
   </div>
-
-  <script>
-    // 위젯 로드 후 푸터/스크롤 영역 강제 제거
-    const observer = new MutationObserver(() => {
-      const widget = document.getElementById('coinmarketcap-widget-coin-price-block');
-      if (!widget) return;
-      
-      // 모든 하위 요소 탐색해서 푸터 제거
-      widget.querySelectorAll('*').forEach(el => {
-        const text = el.textContent || '';
-        const style = window.getComputedStyle(el);
-        
-        // KRW, Powered by 텍스트가 있는 요소 제거
-        if ((text.includes('Powered by') || text.includes('KRW')) 
-            && el.children.length < 5
-            && !text.includes('Bitcoin') && !text.includes('Ethereum') && !text.includes('Tether')) {
-          el.style.display = 'none';
-        }
-        
-        // 스크롤바 요소 제거
-        if (style.overflowX === 'scroll' || style.overflowX === 'auto' ||
-            style.overflowY === 'scroll' || style.overflowY === 'auto') {
-          el.style.overflow = 'hidden';
-        }
-      });
-
-      // 가로 스크롤바 (화살표 포함) 제거
-      widget.querySelectorAll('button, [class*="scroll"], [class*="arrow"], [class*="nav"]').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.height < 30) {
-          el.style.display = 'none';
-        }
-      });
-    });
-    
-    observer.observe(document.body, { childList: true, subtree: true });
-    setTimeout(() => observer.disconnect(), 5000);
-  </script>
 </body>
 </html>
